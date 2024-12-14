@@ -13,12 +13,20 @@ for line in sys.stdin.readlines():
     ps.append(np.array((int(m[1]),int(m[2]))))
     vs.append(np.array((int(m[3]),int(m[4]))))
 
-for j in range(100):
-    i = 81 + 101*j
+def calc_map(i):
     map = np.zeros((dim[1],dim[0]))
     for p, v in zip(ps, vs):
         x,y = (p + i*v) % dim
         map[y][x] += 1
-    plt.title(i)
-    plt.imshow(map)
-    plt.show()
+    return map
+
+N = 10_000
+sym_scores = np.zeros(N)
+for i in range(N):
+    map = calc_map(i)
+    sym_scores[i] = np.sum(map*map[:,::-1])
+
+i = sym_scores.argmax()
+plt.title(i)
+plt.imshow(calc_map(i))
+plt.show()
