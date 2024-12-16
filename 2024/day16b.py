@@ -2,27 +2,8 @@ import sys
 from collections import defaultdict
 from itertools import product
 
-map = [list(line) for line in sys.stdin.read().split()]
+from day16a import end, map, neighbors, start
 
-start = end = None
-for r,c in product(range(len(map)), range(len(map[0]))):
-    if map[r][c] == "S": start = (r, c, "E")
-    if map[r][c] == "E": end = (r, c, None)
-
-def advance(state):
-    r, c, dir = state
-    return (r + dict(N=-1,S=1,E=0,W=0)[dir], c + dict(N=0,S=0,E=1,W=-1)[dir], dir)
-
-def neighbors(state):
-    r, c, dir = state
-    # Turn
-    for dir_ in dict(N="WE",S="WE",E="NS",W="NS")[dir]:
-        if dir_ != dir:
-            yield (r, c, dir_), 1000
-    # Move
-    r_, c_, dir_ = advance(state)
-    if map[r_][c_] != "#":
-        yield (r_, c_, dir_), 1
 
 def find_visited(came_from, x):
     visited = set(((x[0],x[1]),))
@@ -52,7 +33,3 @@ def search():
 
 score, visited = search()
 print(score, len(visited))
-for r,c in visited:
-    assert map[r][c] in ".SE"
-    map[r][c] = "O"
-print("\n".join("".join(line) for line in map))

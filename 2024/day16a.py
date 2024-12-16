@@ -39,4 +39,5 @@ def search():
                 g_score[neighbor] = ten_g_score
                 open_set.add(neighbor)
 
-print(search())
+if __name__ == "__main__":
+    print(search())
