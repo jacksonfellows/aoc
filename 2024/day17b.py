@@ -1,6 +1,7 @@
+import sys
 from math import floor
 
-# from day17a import read_stdin
+from day17a import read_stdin
 
 
 def run_match(registers, program):
@@ -44,25 +45,25 @@ def run_match(registers, program):
             ip += 2
     return output
 
-registers = [0, 0, 0]
-program = [2,4,1,1,7,5,4,6,1,4,0,3,5,5,3,0]
+_, program = read_stdin()
 
 N = 18
-
-firsts = [0]
+prefixes = [0]
+sols = set()
 
 for _ in range(10):
-    next_firsts = set()
-    print("len:", len(firsts), _)
+    next_prefixes = set()
     for x in range(1,1<<N):
-        for f in firsts:
-            A = (x << (_*N)) + f
-            registers[0] = A
-            registers[1] = 0
-            registers[2] = 0
-            output = run_match(registers, program)
+        for pre in prefixes:
+            A = (x << (_*N)) + pre
+            registers = [A, 0, 0]
+            try:
+                output = run_match(registers, program)
+            except:
+                print(min(sols))
+                sys.exit()
             if output:
-                print(output)
-                print(bin(A))
-                next_firsts.add(A)
-    firsts = next_firsts
+                next_prefixes.add(A)
+                if len(output) == len(program):
+                    sols.add(A)
+    prefixes = next_prefixes
